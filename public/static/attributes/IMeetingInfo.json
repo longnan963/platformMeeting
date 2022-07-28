@@ -130,29 +130,60 @@
                     "bindKey": "box",
                     "default": {
                         "marginTopVal": "",
-                        "marginRightVal": "2%",
+                        "marginRightVal": "",
                         "marginBottomVal": "",
-                        "marginLeftVal": "2%",
+                        "marginLeftVal": "",
                         "paddingTopVal": "",
                         "paddingRightVal": "",
                         "paddingBottomVal": "",
                         "paddingLeftVal": ""
                     }
                 },
+
+
                 {
-                    "type": "colorPicker",
-                    "layoutType": "inline",
-                    "text": "背景色",
-                    "bindKey": "bgColor",
-                    "placeholder": "请选择颜色",
-                    "default": {}
+                    "type": "group",
+                    "text": "背景设置",
+                    "children": [{
+                            "type": "uploadImage",
+                            "layoutType": "inline",
+                            "text": "背景图片",
+                            "bindKey": "bgImgUrl",
+                            "placeholder": "可输入图片地址或直接上传"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "背景色",
+                            "bindKey": "bgColor",
+                            "placeholder": "请选择颜色",
+                            "default": {}
+                        }
+                    ]
                 },
+
                 {
-                    "type": "uploadImage",
-                    "layoutType": "inline",
-                    "text": "背景图片",
-                    "bindKey": "bgImgUrl",
-                    "placeholder": "可输入图片地址或直接上传"
+                    "type": "group",
+                    "text": "头像图片大小",
+                    "children": [{
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "宽",
+                            "desc": "填写auto则为自适应，或者使用px、%、vw等单位，比如100%、100px、100vw等等",
+                            "bindKey": "imgWidth",
+                            "width": "90px",
+                            "default": "90px"
+                        },
+                        {
+                            "type": "input",
+                            "layoutType": "block",
+                            "text": "高",
+                            "desc": "填写auto则为自适应，或者使用px、%、vh等单位，比如100%、100px、100vh等等",
+                            "bindKey": "imgHeight",
+                            "width": "90px",
+                            "default": "90px"
+                        }
+                    ]
                 },
                 {
                     "type": "inputNumberUnit",
@@ -303,66 +334,6 @@
                     "display": "@[bgImgUrl]"
                 },
                 {
-                    "type": "border",
-                    "layoutType": "block",
-                    "text": "边框",
-                    "bindKey": "border",
-                    "default": {
-                        "border": {
-                            "top": {
-                                "style": "solid",
-                                "width": 0,
-                                "widthUnit": "px",
-                                "colors": {
-                                    "hex8": "#000000FF"
-                                }
-                            },
-                            "right": {
-                                "style": "solid",
-                                "width": 0,
-                                "widthUnit": "px",
-                                "colors": {
-                                    "hex8": "#000000FF"
-                                }
-                            },
-                            "bottom": {
-                                "style": "solid",
-                                "width": 0,
-                                "widthUnit": "px",
-                                "colors": {
-                                    "hex8": "#000000FF"
-                                }
-                            },
-                            "left": {
-                                "style": "solid",
-                                "width": 0,
-                                "widthUnit": "px",
-                                "colors": {
-                                    "hex8": "#000000FF"
-                                }
-                            }
-                        },
-                        "radius": {
-                            "leftTop": {
-                                "radius": 8,
-                                "radiusUnit": "px"
-                            },
-                            "rightTop": {
-                                "radius": 8,
-                                "radiusUnit": "px"
-                            },
-                            "leftBottom": {
-                                "radius": 8,
-                                "radiusUnit": "px"
-                            },
-                            "rightBottom": {
-                                "radius": 8,
-                                "radiusUnit": "px"
-                            }
-                        }
-                    }
-                },
-                {
                     "type": "font",
                     "layoutType": "block",
                     "text": "时间地点文字",
@@ -377,28 +348,55 @@
                     }
                 },
                 {
-                    "type": "group",
-                    "text": "时间地点图标",
+                    "type": "font",
+                    "text": "时间图标",
                     "desc": "点击？查看样式设置用法指南",
-                    "display": "@[showIcon]",
-                    "helpUrl": "",
+                    "bindKey": "timefont",
                     "children": [{
                             "type": "iconSelect",
                             "layoutType": "inline",
                             "text": "自定义图标",
-                            "bindKey": "titleIcon"
+                            "bindKey": "timeIcon"
                         },
                         {
                             "type": "colorPicker",
                             "layoutType": "inline",
                             "text": "图标颜色",
-                            "bindKey": "titleIconColor"
+                            "bindKey": "timeIconColor"
                         },
                         {
                             "type": "inputNumberUnit",
                             "layoutType": "inline",
                             "text": "图标大小",
-                            "bindKey": "titleIconSize",
+                            "bindKey": "timeIconSize",
+                            "default": {
+                                "inputVal": 18,
+                                "selectVal": "px"
+                            }
+                        }
+                    ]
+                }, {
+                    "type": "font",
+                    "text": "地点图标",
+                    "desc": "点击？查看样式设置用法指南",
+                    "bindKey": "placefont",
+                    "children": [{
+                            "type": "iconSelect",
+                            "layoutType": "inline",
+                            "text": "自定义图标",
+                            "bindKey": "placeIcon"
+                        },
+                        {
+                            "type": "colorPicker",
+                            "layoutType": "inline",
+                            "text": "图标颜色",
+                            "bindKey": "placeIconColor"
+                        },
+                        {
+                            "type": "inputNumberUnit",
+                            "layoutType": "inline",
+                            "text": "图标大小",
+                            "bindKey": "placeIconSize",
                             "default": {
                                 "inputVal": 18,
                                 "selectVal": "px"
@@ -406,6 +404,7 @@
                         }
                     ]
                 }
+
             ]
         },
         {
@@ -469,6 +468,30 @@
                     "desc": "主题的主要颜色",
                     "placeholder": "请选择颜色",
                     "display": "@[key]"
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "文字颜色",
+                    "bindKey": "fontColor",
+                    "desc": "应用于文字颜色",
+                    "placeholder": "请选择颜色"
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "时间图标颜色",
+                    "bindKey": "timeColor",
+                    "desc": "应用于时间图标颜色",
+                    "placeholder": "请选择颜色"
+                },
+                {
+                    "type": "colorPicker",
+                    "layoutType": "inline",
+                    "text": "地点图标颜色",
+                    "bindKey": "placeColor",
+                    "desc": "应用于地点图标颜色",
+                    "placeholder": "请选择颜色"
                 }
             ]
         },

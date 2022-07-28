@@ -10,7 +10,7 @@
         <!-- {{propData.meetingInfo}} -->
         <div class="idm_meetingInfo clearFix">
             <div class="idm_meetingInfo_left fl">
-                <img src="../assets/img/userPhoto.png" alt="">
+                <img :src="IDM.url.getModuleAssetsWebPath(require('../assets/img/userPhoto.png'),moduleObject)" alt="">
             </div>
             <div class="idm_meetingInfo_right fl">
                 <div class="idm_meetingInfo_userName">
@@ -21,11 +21,11 @@
                     <span>{{propData.meetName}}</span>
                     <i class="iconfont icon-qiehuan1" v-show='propData.meetSwitch'></i>
                 </div>
-                <div class="idm_meetingInfo_meetDate">
+                <div class="idm_meetingInfo_meetDate idm_meetingInfo_datePlace">
                     <i class="iconfont icon-shijian" v-show='propData.isShowIcon'></i>
                     <span>{{propData.meetDate}}</span>
                 </div>
-                <div class="idm_meetingInfo_meetPlace">
+                <div class="idm_meetingInfo_meetPlace idm_meetingInfo_datePlace">
                     <i class="iconfont icon-dingwei" v-show='propData.isShowIcon'></i>
                     <span>{{propData.meetPlace}}</span>
                 </div>
@@ -63,6 +63,9 @@ export default {
         this.convertAttrToStyleObject();
     },
     mounted () {
+        this.$nextTick(() => {
+            console.log(document.getElementsByClassName('idm_meetingInfo')[0].offsetWidth)
+        })
 
     },
     destroyed () { },
@@ -93,7 +96,11 @@ export default {
          */
         convertAttrToStyleObject () {
             let styleObject = {};
-            let iconSizeStyleObject = {};
+            let imgStyleObject = {};
+            let meetInfoRightStyleObject = {};
+            let fontSizeStyleObject = {};
+            let timeiconSizeStyleObject = {};
+            let placeiconSizeStyleObject = {};
             if (this.propData.bgSize && this.propData.bgSize == "custom") {
                 styleObject["background-size"] = (this.propData.bgSizeWidth ? this.propData.bgSizeWidth.inputVal + this.propData.bgSizeWidth.selectVal : "auto") + " " +
                     (this.propData.bgSizeHeight ? this.propData.bgSizeHeight.inputVal + this.propData.bgSizeHeight.selectVal : "auto");
@@ -119,6 +126,12 @@ export default {
                         case "width":
                         case "height":
                             styleObject[key] = element;
+                            break;
+                        case "imgWidth":
+                            imgStyleObject['width'] = element;
+                            meetInfoRightStyleObject['width'] = `calc(100% - ${element} - 20px)`;
+                        case "imgHeight":
+                            imgStyleObject['height'] = element;
                             break;
                         case "box":
                             if (element.marginTopVal) {
@@ -180,32 +193,29 @@ export default {
                             styleObject["font-weight"] = element.fontWeight && element.fontWeight.split(" ")[0];
                             styleObject["font-style"] = element.fontStyle;
                             styleObject["font-size"] = element.fontSize + element.fontSizeUnit;
-                            iconSizeStyleObject['font-size'] = (element.fontStyle + 4) + 'px';
+                            fontSizeStyleObject['font-size'] = element.fontSize + element.fontSizeUnit;
+                            break;
+                        case "timefont":
+                            if (element.fontColors.hex8) {
+                                timeiconSizeStyleObject["color"] = IDM.hex8ToRgbaString(element.fontColors.hex8);
+                            }
+                            timeiconSizeStyleObject["font-size"] = element.fontSize + element.fontSizeUnit;
+                            break;
+                        case "placefont":
+                            if (element.fontColors.hex8) {
+                                placeiconSizeStyleObject["color"] = IDM.hex8ToRgbaString(element.fontColors.hex8);
+                            }
+                            placeiconSizeStyleObject["font-size"] = element.fontSize + element.fontSizeUnit;
                             break;
                     }
                 }
             }
-
-            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .hover_button .idm_filed_svg_icon', iconSizeStyleObject);
-            window.IDM.setStyleToPageHead('idm_popupWorkbench_popup' + ' .hover_button', btnStyleObject);
-            window.IDM.setStyleToPageHead(
-                'idm_popupWorkbench_popup' + ' .hover_button .idm_filed_svg_icon',
-                iconSizeStyleObject
-            );
-            window.IDM.setStyleToPageHead(
-                'idm_popupWorkbench_popup' + ' .van-cell.cell_selected .van-cell__title div',
-                cellSelectedStyleObject
-            );
-            window.IDM.setStyleToPageHead('idm_popupWorkbench_popup', popupStyleObject);
-            window.IDM.setStyleToPageHead('idm_popupWorkbench_popup' + ' .van-cell', cellStyleObject);
-            window.IDM.setStyleToPageHead(
-                'idm_popupWorkbench_popup' + ' .van-cell .van-cell__title div',
-                titleStyleObject
-            );
-            window.IDM.setStyleToPageHead(
-                'idm_popupWorkbench_popup' + ' .van-cell .van-radio .van-radio__label',
-                radioStyleObject
-            );
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm_meetingInfo', styleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm_meetingInfo_left img', imgStyleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm_meetingInfo_right', meetInfoRightStyleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm_meetingInfo_datePlace', fontSizeStyleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm_meetingInfo_meetDate .iconfont', timeiconSizeStyleObject);
+            window.IDM.setStyleToPageHead(this.moduleObject.id + ' .idm_meetingInfo_meetPlace .iconfont', placeiconSizeStyleObject);
         },
         /**
          * 主题颜色
@@ -215,61 +225,25 @@ export default {
             if (!themeList) {
                 return;
             }
-            const themeNamePrefix =
-                IDM.setting &&
-                    IDM.setting.applications &&
-                    IDM.setting.applications.themeNamePrefix
-                    ? IDM.setting.applications.themeNamePrefix
-                    : "idm-theme-";
+            const themeNamePrefix = IDM.setting && IDM.setting.applications && IDM.setting.applications.themeNamePrefix ? IDM.setting.applications.themeNamePrefix : "idm-theme-";
             for (var i = 0; i < themeList.length; i++) {
                 var item = themeList[i];
-
-                let dateNumStyleObject = {
+                let styleObject = {
                     "background-color": item.mainColor ? IDM.hex8ToRgbaString(item.mainColor.hex8) : "",
                 };
-                let todayStyleObject = {
-                    "color": item.mainColor ? IDM.hex8ToRgbaString(item.mainColor.hex8) : "",
+                let fontStyleObject = {
+                    "color": item.fontColor ? IDM.hex8ToRgbaString(item.fontColor.hex8) : "",
                 };
-                let titleSvgStyleObject = {
-                    "color": item.mainColor ? IDM.hex8ToRgbaString(item.mainColor.hex8) : "",
+                let timeIconStyleObject = {
+                    "color": item.timeColor ? IDM.hex8ToRgbaString(item.timeColor.hex8) : "",
                 };
-
-                IDM.setStyleToPageHead(
-                    "." +
-                    themeNamePrefix +
-                    item.key +
-                    " #" +
-                    (this.moduleObject.packageid || "module_demo") +
-                    " .i-schedule-header-tit i-schedule-header-tit-icon",
-                    titleSvgStyleObject
-                );
-                IDM.setStyleToPageHead(
-                    "." +
-                    themeNamePrefix +
-                    item.key +
-                    " #" +
-                    (this.moduleObject.packageid || "module_demo") +
-                    " .swiper-wrapper .swiper-slide li .date-num.active",
-                    dateNumStyleObject
-                );
-                IDM.setStyleToPageHead(
-                    "." +
-                    themeNamePrefix +
-                    item.key +
-                    " #" +
-                    (this.moduleObject.packageid || "module_demo") +
-                    " .swiper-wrapper .swiper-slide li .today.active",
-                    todayStyleObject
-                );
-                IDM.setStyleToPageHead(
-                    "." +
-                    themeNamePrefix +
-                    item.key +
-                    " #" +
-                    (this.moduleObject.packageid || "module_demo") +
-                    " .i-schedule-content-note-left p.active::before",
-                    dateNumStyleObject
-                );
+                let placeIconStyleObject = {
+                    "color": item.placeColor ? IDM.hex8ToRgbaString(item.placeColor.hex8) : "",
+                };
+                IDM.setStyleToPageHead("." + themeNamePrefix + item.key + " #" + (this.moduleObject.packageid || "module_demo") + " .idm_meetingInfo", styleObject);
+                IDM.setStyleToPageHead("." + themeNamePrefix + item.key + " #" + (this.moduleObject.packageid || "module_demo") + " .idm_meetingInfo", fontStyleObject);
+                IDM.setStyleToPageHead("." + themeNamePrefix + item.key + " #" + (this.moduleObject.packageid || "module_demo") + " .idm_meetingInfo_meetDate .iconfont", timeIconStyleObject);
+                IDM.setStyleToPageHead("." + themeNamePrefix + item.key + " #" + (this.moduleObject.packageid || "module_demo") + " .idm_meetingInfo_meetPlace .iconfont", placeIconStyleObject);
             }
         },
     }
@@ -279,7 +253,8 @@ export default {
 .idm_meetingInfo {
     width: 100%;
     height: 200px;
-    background-image: url('../assets/img/bg.png');
+    background-color: blue;
+    //background-image: url('../assets/img/bg.png');
     background-size: 100% 100%;
     color: #fff;
     padding: 20px 10px 15px 10px;
@@ -318,11 +293,11 @@ export default {
     }
     &_meetDate,
     &_meetPlace {
+        font-size: 14px;
         .iconfont {
             font-size: 18px;
         }
         span {
-            font-size: 14px;
             margin-left: 10px;
         }
     }
