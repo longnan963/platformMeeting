@@ -130,6 +130,7 @@ export default {
                         case "imgWidth":
                             imgStyleObject['width'] = element;
                             meetInfoRightStyleObject['width'] = `calc(100% - ${element} - 20px)`;
+                            break;
                         case "imgHeight":
                             imgStyleObject['height'] = element;
                             break;
@@ -246,6 +247,13 @@ export default {
                 IDM.setStyleToPageHead("." + themeNamePrefix + item.key + " #" + (this.moduleObject.packageid || "module_demo") + " .idm_meetingInfo_meetPlace .iconfont", placeIconStyleObject);
             }
         },
+        getMeetingInfo () {
+            let dataSource = this.propData.dataSource
+            IDM.http.post('', { id: dataSource.value }, { headers: { "Content-Type": "application/json;charset=UTF-8" } }).done((res) => {
+
+            }).error((response) => {
+            });
+        }
     }
 }
 </script>

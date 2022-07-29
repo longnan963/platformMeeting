@@ -44,6 +44,12 @@ Vue.prototype.IDM = window.IDM;
 Vue.config.productionTip = false
     //这里每次打包都会生成一个随机的变量，唯一，保证能加载到对应的对象
 window[`${process.env.CodeVar}`] = Main;
+import { Tab, Tabs } from 'vant';
+
+Vue.use(Tab);
+Vue.use(Tabs);
+import 'vant/lib/tabs/style'
+import 'vant/lib/tab/style'
 // //每次打包都会生成不同的CodeVar
 //这里渲染需要更改，改成实时渲染id
 // new Vue({

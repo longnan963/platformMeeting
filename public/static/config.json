@@ -9,5 +9,11 @@
         "className": "IMeetingInfo",
         "comType": "common",
         "comLangue": "vue"
+    }, {
+        "classId": "idm.component.platformMeeting.tabs",
+        "comName": "tab页签",
+        "className": "ITabs",
+        "comType": "common",
+        "comLangue": "vue"
     }]
 }
